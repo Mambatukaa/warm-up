@@ -26,6 +26,7 @@ export default class PlayScene extends Phaser.Scene {
     this.createBg();
     this.createBird();
     this.createPipes();
+    this.createColliders();
     this.handleInputs();
   }
 
@@ -51,14 +52,24 @@ export default class PlayScene extends Phaser.Scene {
 
     // render pipes
     for (let i = 0; i < PIPES_TO_RENDER; i++) {
-      const upperPipe = this.pipes.create(0, 0, 'pipe').setOrigin(0, 1);
+      const upperPipe = this.pipes
+        .create(0, 0, 'pipe')
+        .setImmovable(true)
+        .setOrigin(0, 1);
 
-      const lowerPipe = this.pipes.create(0, 0, 'pipe').setOrigin(0, 0);
+      const lowerPipe = this.pipes
+        .create(0, 0, 'pipe')
+        .setImmovable(true)
+        .setOrigin(0, 0);
 
       this.placePipe(upperPipe, lowerPipe);
     }
 
     this.pipes.setVelocityX(-200);
+  }
+
+  createColliders() {
+    this.physics.add.collider(this.bird, this.pipes, this.gameOver, null, this);
   }
 
   handleInputs() {
@@ -67,7 +78,7 @@ export default class PlayScene extends Phaser.Scene {
 
   checkGameStatus() {
     if (this.bird.y < -this.bird.height || this.bird.y > this.config.height) {
-      this.restartBirdPosition();
+      this.gameOver();
     }
   }
 
@@ -75,10 +86,13 @@ export default class PlayScene extends Phaser.Scene {
     this.bird.body.velocity.y = -this.flapVelocity;
   }
 
-  restartBirdPosition() {
-    this.bird.x = this.config.startPosition.x;
-    this.bird.y = this.config.startPosition.y;
-    this.bird.body.velocity.y = 0;
+  gameOver() {
+    // this.bird.x = this.config.startPosition.x;
+    // this.bird.y = this.config.startPosition.y;
+    // this.bird.body.velocity.y = 0;
+
+    this.physics.pause();
+    this.bird.setTint(0xff0000);
   }
 
   placePipe(uPipe, lPipe) {
