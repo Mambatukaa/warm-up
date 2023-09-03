@@ -30,8 +30,8 @@ export default class PlayScene extends Phaser.Scene {
   }
 
   update() {
-    this.updateBird();
-    this.updatePipes();
+    this.checkGameStatus();
+    this.recyclePipes();
   }
 
   createBg() {
@@ -65,14 +65,10 @@ export default class PlayScene extends Phaser.Scene {
     this.input.on('pointerdown', this.flap, this);
   }
 
-  updateBird() {
+  checkGameStatus() {
     if (this.bird.y < -this.bird.height || this.bird.y > this.config.height) {
       this.restartBirdPosition();
     }
-  }
-
-  updatePipes() {
-    this.recyclePipes();
   }
 
   flap() {
