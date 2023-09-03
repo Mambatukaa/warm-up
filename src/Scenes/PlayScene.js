@@ -23,15 +23,30 @@ export default class PlayScene extends Phaser.Scene {
   }
 
   create() {
-    // add background
-    this.add.image(0, 0, 'sky').setOrigin(0);
+    this.createBg();
+    this.createBird();
+    this.createPipes();
+    this.handleInputs();
+  }
 
+  update() {
+    this.updateBird();
+    this.updatePipes();
+  }
+
+  createBg() {
+    this.add.image(0, 0, 'sky').setOrigin(0);
+  }
+
+  createBird() {
     this.bird = this.physics.add
       .sprite(this.config.startPosition.x, this.config.startPosition.y, 'bird')
       .setOrigin(0);
 
     this.bird.body.gravity.y = this.config.velocity;
+  }
 
+  createPipes() {
     this.pipes = this.physics.add.group();
 
     // render pipes
@@ -44,15 +59,19 @@ export default class PlayScene extends Phaser.Scene {
     }
 
     this.pipes.setVelocityX(-200);
+  }
 
+  handleInputs() {
     this.input.on('pointerdown', this.flap, this);
   }
 
-  update() {
+  updateBird() {
     if (this.bird.y < -this.bird.height || this.bird.y > this.config.height) {
       this.restartBirdPosition();
     }
+  }
 
+  updatePipes() {
     this.recyclePipes();
   }
 
