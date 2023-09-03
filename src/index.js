@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 
 const config = {
   type: Phaser.AUTO,
-  width: 800,
+  width: 2000,
   height: 600,
   physics: {
     default: 'arcade',
@@ -46,13 +46,10 @@ function create() {
   bird.body.gravity.y = VELOCITY;
   pipes = this.physics.add.group();
 
-  for(let i = 0; i < RENDER_TO_PIPE; i++)  {
-    const upperPipe = pipes.create(0, 0, 'pipe')
-      .setOrigin(0, 1);
+  for (let i = 0; i < RENDER_TO_PIPE; i++) {
+    const upperPipe = pipes.create(0, 0, 'pipe').setOrigin(0, 1);
 
-    const lowerPipe = pipes.create(0, 0, 'pipe')
-      .setOrigin(0, 0);
-
+    const lowerPipe = pipes.create(0, 0, 'pipe').setOrigin(0, 0);
 
     placePipe(upperPipe, lowerPipe);
   }
@@ -66,7 +63,7 @@ function create() {
 
 function update() {
   if (bird.y < -bird.height || bird.y > config.height) {
-    console.log('game over');
+    restartBirdPosition();
   }
 
   recyclePipe();
@@ -75,23 +72,28 @@ function update() {
 function placePipe(uPipe, lPipe) {
   const rightMostX = getRightMostPipe();
 
-  const pipeVerticalDistance = Phaser.Math.Between(...pipeVeritcalDistanceRange);
-  const pipeVerticalPosition = Phaser.Math.Between(20, config.height - 20 - pipeVerticalDistance);
+  const pipeVerticalDistance = Phaser.Math.Between(
+    ...pipeVeritcalDistanceRange
+  );
+  const pipeVerticalPosition = Phaser.Math.Between(
+    20,
+    config.height - 20 - pipeVerticalDistance
+  );
 
-  const pipeHorizontalDistance = Phaser.Math.Between(...pipeHorizontalDistanceRange) + rightMostX;
-
+  const pipeHorizontalDistance =
+    Phaser.Math.Between(...pipeHorizontalDistanceRange) + rightMostX;
 
   uPipe.x = pipeHorizontalDistance;
   uPipe.y = pipeVerticalPosition;
 
-  lPipe.x = uPipe.x; 
+  lPipe.x = uPipe.x;
   lPipe.y = uPipe.y + pipeVerticalDistance;
 }
 
 function getRightMostPipe() {
   let rightMostX = 0;
 
-  pipes.getChildren().forEach(function(pipe) {
+  pipes.getChildren().forEach(function (pipe) {
     rightMostX = Math.max(pipe.x, rightMostX);
   });
 
@@ -100,17 +102,22 @@ function getRightMostPipe() {
 
 function recyclePipe() {
   const tempPipes = [];
-  pipes.getChildren().forEach(function(pipe) {
-    if(pipe.getBounds().right < 0) {
+  pipes.getChildren().forEach(function (pipe) {
+    if (pipe.getBounds().right < 0) {
       tempPipes.push(pipe);
-      if(tempPipes.length === 2) {
+      if (tempPipes.length === 2) {
         placePipe(...tempPipes);
       }
     }
-  })
-
+  });
 }
 
 function flat() {
   bird.body.velocity.y = -flapVelocity;
+}
+
+function restartBirdPosition() {
+  bird.x = initialBirdPosition.x;
+  bird.y = initialBirdPosition.y;
+  bird.body.velocity.y = 0;
 }
