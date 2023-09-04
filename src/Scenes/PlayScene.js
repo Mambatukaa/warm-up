@@ -10,9 +10,6 @@ export default class PlayScene extends BaseScene {
     this.bird = null;
     this.pipes = null;
 
-    this.pipeVerticalDistanceRange = [150, 250];
-    this.pipeHorizontalDistanceRange = [300, 400];
-
     this.flapVelocity = 300;
     this.birdGravity = 600;
 
@@ -20,6 +17,24 @@ export default class PlayScene extends BaseScene {
     this.scoreText = null;
 
     this.paused = false;
+
+    this.difficulty = 'easy';
+    this.difficultyText = null;
+
+    this.difficulties = {
+      easy: {
+        pipeHorizontalDistanceRange: [300, 350],
+        pipeVerticalDistanceRange: [160, 200]
+      },
+      medium: {
+        pipeHorizontalDistanceRange: [270, 300],
+        pipeVerticalDistanceRange: [130, 160]
+      },
+      hard: {
+        pipeHorizontalDistanceRange: [220, 270],
+        pipeVerticalDistanceRange: [90, 130]
+      }
+    };
   }
 
   create() {
@@ -137,6 +152,16 @@ export default class PlayScene extends BaseScene {
       fontSize: '20px',
       fill: '#000'
     });
+
+    this.difficultyText = this.add.text(
+      this.config.width - 90,
+      16,
+      this.difficulty,
+      {
+        fontSize: '20px',
+        fill: '#000'
+      }
+    );
   }
 
   handleInputs() {
@@ -178,14 +203,14 @@ export default class PlayScene extends BaseScene {
     const rightMostX = this.getRightMostPipe();
 
     const pipeVerticalDistance = Phaser.Math.Between(
-      ...this.pipeVerticalDistanceRange
+      ...this.difficulties[this.difficulty].pipeVerticalDistanceRange
     );
     const pipeVerticalPosition = Phaser.Math.Between(
       20,
       this.config.height - 20 - pipeVerticalDistance
     );
     const pipeHorizontalDistance = Phaser.Math.Between(
-      ...this.pipeHorizontalDistanceRange
+      ...this.difficulties[this.difficulty].pipeHorizontalDistanceRange
     );
 
     uPipe.x = rightMostX + pipeHorizontalDistance;
@@ -216,6 +241,7 @@ export default class PlayScene extends BaseScene {
           this.placePipe(...tempPipes);
 
           this.increaseScore();
+          this.increaseDifficulty();
         }
       }
     });
@@ -225,6 +251,23 @@ export default class PlayScene extends BaseScene {
     this.score++;
 
     this.scoreText.setText(`Score: ${this.score}`);
+  }
+
+  increaseDifficulty() {
+    if (this.score <= 1) {
+      this.difficulty = 'easy';
+      this.difficultyText.setText(this.difficulty);
+    }
+
+    if (this.score >= 3) {
+      this.difficulty = 'medium';
+      this.difficultyText.setText(this.difficulty);
+    }
+
+    if (this.score >= 10) {
+      this.difficulty = 'hard';
+      this.difficultyText.setText(this.difficulty);
+    }
   }
 
   saveBestScore() {
