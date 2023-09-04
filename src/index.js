@@ -3,6 +3,7 @@ import PlayScene from './Scenes/PlayScene';
 import MenuScene from './Scenes/MenuScene';
 import PreloadScene from './Scenes/PreloadScene';
 import ScoreScene from './Scenes/ScoreScene';
+import PauseScene from './Scenes/PauseScene';
 
 const HEIGHT = 600;
 const WIDTH = 800;
@@ -16,7 +17,7 @@ const COMMON_CONFIG = {
 };
 
 // Make an order of scenes
-const Scenes = [PreloadScene, MenuScene, PlayScene, ScoreScene];
+const Scenes = [PreloadScene, MenuScene, PlayScene, ScoreScene, PauseScene];
 const createScene = Scene => new Scene(COMMON_CONFIG);
 const initScenes = () => Scenes.map(createScene);
 
