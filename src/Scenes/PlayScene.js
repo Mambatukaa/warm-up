@@ -18,6 +18,8 @@ export default class PlayScene extends BaseScene {
 
     this.score = 0;
     this.scoreText = null;
+
+    this.paused = false;
   }
 
   create() {
@@ -28,6 +30,42 @@ export default class PlayScene extends BaseScene {
     this.createScore();
     this.createPause();
     this.handleInputs();
+    this.listenToEvent();
+  }
+
+  listenToEvent() {
+    if (this.pauseEvent) {
+      return;
+    }
+
+    this.pauseEvent = this.events.on('resume', () => {
+      this.initialTime = 3;
+      this.countDownText = this.add
+        .text(
+          ...this.screenCenter,
+          'Fly in: ' + this.initialTime,
+          this.fontOptions
+        )
+        .setOrigin(0.5);
+
+      this.timedEvent = this.time.addEvent({
+        delay: 1000,
+        callback: () => this.countDown(),
+        callbackScope: this,
+        loop: true
+      });
+    });
+  }
+
+  countDown() {
+    this.initialTime--;
+    this.countDownText.setText('Fly in: ' + this.initialTime);
+
+    if (this.initialTime < 0) {
+      this.paused = false;
+      this.countDownText.setText('');
+      this.physics.resume();
+    }
   }
 
   update() {
@@ -55,6 +93,7 @@ export default class PlayScene extends BaseScene {
     pauseBtn.on('pointerdown', () => {
       this.physics.pause();
       this.scene.pause();
+      this.paused = true;
 
       this.scene.launch('PauseScene');
     });
@@ -114,6 +153,9 @@ export default class PlayScene extends BaseScene {
   }
 
   flap() {
+    if (this.paused) {
+      return;
+    }
     this.bird.body.velocity.y = -this.flapVelocity;
   }
 
