@@ -13,7 +13,7 @@ export default class PreloadScene extends BaseScene {
   }
 
   create() {
-    this.scene.start('PlayScene');
+    this.scene.start('MenuScene');
   }
 
   update() {
