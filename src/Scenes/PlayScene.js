@@ -24,6 +24,7 @@ export default class PlayScene extends Phaser.Scene {
     this.load.image('sky', 'assets/sky.png');
     this.load.image('bird', 'assets/bird.png');
     this.load.image('pipe', 'assets/pipe.png');
+    this.load.image('pause', 'assets/pause.png');
   }
 
   create() {
@@ -32,6 +33,7 @@ export default class PlayScene extends Phaser.Scene {
     this.createPipes();
     this.createColliders();
     this.createScore();
+    this.createPause();
     this.handleInputs();
   }
 
@@ -52,6 +54,19 @@ export default class PlayScene extends Phaser.Scene {
     this.bird.body.gravity.y = this.birdGravity;
 
     this.bird.setCollideWorldBounds();
+  }
+
+  createPause() {
+    const pauseBtn = this.add
+      .image(this.config.width - 10, this.config.height - 10, 'pause')
+      .setScale(3)
+      .setInteractive()
+      .setOrigin(1);
+
+    pauseBtn.on('pointerdown', () => {
+      this.physics.pause();
+      this.scene.pause();
+    });
   }
 
   createPipes() {
@@ -81,11 +96,17 @@ export default class PlayScene extends Phaser.Scene {
 
   createScore() {
     this.score = 0;
-    this.scoreText = this.add.text(16, 16, `Score: ${0}`, { fontSize: '32px', fill: "#000"})
+    this.scoreText = this.add.text(16, 16, `Score: ${0}`, {
+      fontSize: '32px',
+      fill: '#000'
+    });
 
     const bestScore = localStorage.getItem('bestScore');
 
-    this.add.text(16, 50, `Best Score: ${bestScore || 0}`, { fontSize: '20px', fill: "#000"})
+    this.add.text(16, 50, `Best Score: ${bestScore || 0}`, {
+      fontSize: '20px',
+      fill: '#000'
+    });
   }
 
   handleInputs() {
@@ -93,7 +114,10 @@ export default class PlayScene extends Phaser.Scene {
   }
 
   checkGameStatus() {
-    if (this.bird.getBounds().bottom >= this.config.height || this.bird.y <= 0) {
+    if (
+      this.bird.getBounds().bottom >= this.config.height ||
+      this.bird.y <= 0
+    ) {
       this.gameOver();
     }
   }
@@ -111,10 +135,10 @@ export default class PlayScene extends Phaser.Scene {
     this.time.addEvent({
       delay: 1000,
       callback: () => {
-        this.scene.start()
+        this.scene.start();
       },
       loop: false
-    })
+    });
   }
 
   placePipe(uPipe, lPipe) {
@@ -171,13 +195,12 @@ export default class PlayScene extends Phaser.Scene {
   }
 
   saveBestScore() {
-    const bestScoreText = localStorage.getItem("bestScore");
+    const bestScoreText = localStorage.getItem('bestScore');
     const bestScore = parseInt(bestScoreText, 10);
 
-    if(!bestScore || this.score > bestScore) {
+    if (!bestScore || this.score > bestScore) {
       localStorage.setItem('bestScore', this.score);
     }
-
   }
 }
 
