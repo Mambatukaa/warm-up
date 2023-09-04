@@ -6,7 +6,7 @@ import ScoreScene from './Scenes/ScoreScene';
 import PauseScene from './Scenes/PauseScene';
 
 const HEIGHT = 600;
-const WIDTH = 800;
+const WIDTH = 500;
 
 const BIRD_POSITION = { x: WIDTH * 0.1, y: HEIGHT * 0.5 };
 
@@ -24,10 +24,11 @@ const initScenes = () => Scenes.map(createScene);
 const config = {
   type: Phaser.AUTO,
   ...COMMON_CONFIG,
+  pixelArt: true,
   physics: {
     default: 'arcade',
     arcade: {
-      debug: true
+      // debug: true
     }
   },
   scene: initScenes()
