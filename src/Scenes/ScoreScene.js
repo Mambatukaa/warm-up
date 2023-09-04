@@ -2,11 +2,11 @@ import BaseScene from './BaseScene';
 
 export default class ScoreScene extends BaseScene {
   constructor(config) {
-    super('ScoreScene', config);
+    super('ScoreScene', {...config, canGoBack: true});
   }
 
   create() {
-    this.add.image(0, 0, 'sky').setOrigin(0);
+    super.create();
 
     const bestScore = localStorage.getItem('bestScore');
 
