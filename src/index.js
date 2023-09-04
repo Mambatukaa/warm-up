@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import PlayScene from './Scenes/PlayScene';
 import MenuScene from './Scenes/MenuScene';
+import PreloadScene from './Scenes/PreloadScene';
 
 const HEIGHT = 600;
 const WIDTH = 800;
@@ -11,7 +12,12 @@ const COMMON_CONFIG = {
   width: WIDTH,
   height: HEIGHT,
   startPosition: BIRD_POSITION
-}
+};
+
+// Make an order of scenes
+const Scenes = [PreloadScene, MenuScene, PlayScene];
+const createScene = Scene => new Scene(COMMON_CONFIG);
+const initScenes = () => Scenes.map(createScene);
 
 const config = {
   type: Phaser.AUTO,
@@ -22,7 +28,7 @@ const config = {
       debug: true
     }
   },
-  scene: [new MenuScene(COMMON_CONFIG), new PlayScene(COMMON_CONFIG)]
+  scene: initScenes()
 };
 
 new Phaser.Game(config);
