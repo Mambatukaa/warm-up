@@ -15,6 +15,9 @@ export default class PlayScene extends Phaser.Scene {
 
     this.flapVelocity = 300;
     this.birdGravity = 600;
+
+    this.score = 0;
+    this.scoreText = null;
   }
 
   preload() {
@@ -28,6 +31,7 @@ export default class PlayScene extends Phaser.Scene {
     this.createBird();
     this.createPipes();
     this.createColliders();
+    this.createScore();
     this.handleInputs();
   }
 
@@ -75,6 +79,15 @@ export default class PlayScene extends Phaser.Scene {
     this.physics.add.collider(this.bird, this.pipes, this.gameOver, null, this);
   }
 
+  createScore() {
+    this.score = 0;
+    this.scoreText = this.add.text(16, 16, `Score: ${0}`, { fontSize: '32px', fill: "#000"})
+
+    const bestScore = localStorage.getItem('bestScore');
+
+    this.add.text(16, 50, `Best Score: ${bestScore || 0}`, { fontSize: '20px', fill: "#000"})
+  }
+
   handleInputs() {
     this.input.on('pointerdown', this.flap, this);
   }
@@ -90,6 +103,8 @@ export default class PlayScene extends Phaser.Scene {
   }
 
   gameOver() {
+    this.saveBestScore();
+
     this.physics.pause();
     this.bird.setTint(0xff0000);
 
@@ -142,9 +157,27 @@ export default class PlayScene extends Phaser.Scene {
 
         if (tempPipes.length === 2) {
           this.placePipe(...tempPipes);
+
+          this.increaseScore();
         }
       }
     });
+  }
+
+  increaseScore() {
+    this.score++;
+
+    this.scoreText.setText(`Score: ${this.score}`);
+  }
+
+  saveBestScore() {
+    const bestScoreText = localStorage.getItem("bestScore");
+    const bestScore = parseInt(bestScoreText, 10);
+
+    if(!bestScore || this.score > bestScore) {
+      localStorage.setItem('bestScore', this.score);
+    }
+
   }
 }
 
