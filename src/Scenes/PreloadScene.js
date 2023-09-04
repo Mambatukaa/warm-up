@@ -1,8 +1,8 @@
-import { Scene } from 'phaser';
+import BaseScene from "./BaseScene";
 
-export default class PreloadScene extends Scene {
-  constructor() {
-    super('PreloadScene');
+export default class PreloadScene extends BaseScene {
+  constructor(config) {
+    super('PreloadScene', config);
   }
 
   preload() {

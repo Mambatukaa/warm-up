@@ -1,8 +1,8 @@
-import { Scene } from 'phaser';
+import BaseScene from './BaseScene';
 
-export default class MenuScene extends Scene {
-  constructor() {
-    super('MenuScene');
+export default class MenuScene extends BaseScene {
+  constructor(config) {
+    super('MenuScene', config);
   }
 
   create() {
