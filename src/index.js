@@ -9,7 +9,6 @@ const BIRD_POSITION = { x: WIDTH * 0.1, y: HEIGHT * 0.5 };
 const COMMON_CONFIG = {
   width: WIDTH,
   height: HEIGHT,
-  velocity: 400,
   startPosition: BIRD_POSITION
 }
 
