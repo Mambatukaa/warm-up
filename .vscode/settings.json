@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "/subscriptions/8a5f4990-04bf-4ff3-a1cb-7b34cf3420b0/resourceGroups/appsvc_linux_centralus_basic/providers/Microsoft.Web/sites/flappyBirdWarmUp",
+  "appService.deploySubpath": "."
+}
